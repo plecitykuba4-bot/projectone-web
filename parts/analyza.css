@@ -1,0 +1,57 @@
+/* ANALÝZA VE 3D — scroll-driven fyzikální scéna.
+   Sekce je vysoká, obsah drží sticky „pin“. Scroll jen váží síly, pohyb počítá fyzika.
+   Canvas leží pod textem přes celou šířku, kontejnery propouští kurzor do scény. */
+#analyza{height:560vh;padding:0;border-top:1px solid var(--line);overflow:clip}
+.an-pin{position:sticky;top:0;height:100vh;min-height:640px;overflow:hidden}
+.an-glow{position:absolute;inset:0;pointer-events:none;will-change:opacity}
+.an-glow.g1{opacity:var(--an-a,.35)}
+.an-glow.g2{opacity:var(--an-b,.15)}
+.an-glow.g1{background:radial-gradient(52% 62% at 68% 52%,rgba(0,53,102,.55),rgba(0,29,61,.18) 55%,rgba(0,8,20,0) 80%)}
+.an-glow.g2{background:radial-gradient(46% 56% at 68% 54%,rgba(255,195,0,.10),rgba(0,29,61,.22) 55%,rgba(0,8,20,0) 80%)}
+.an-pin>canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .55s ease}
+.an-pin>canvas.ready{opacity:1}
+.an-copy{position:relative;z-index:2;height:100%;padding:82px 64px 0;display:flex;align-items:center;pointer-events:none}
+.an-text{width:470px;pointer-events:auto}
+.an-steps{margin-top:36px;list-style:none;border-top:1px solid var(--line)}
+.an-steps li{position:relative;display:grid;grid-template-columns:52px 1fr;gap:14px;padding:16px 0 18px;border-bottom:1px solid var(--line);opacity:.42;transition:opacity .35s}
+.an-steps li.on{opacity:1}
+.an-steps li b{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.03em;color:var(--gold)}
+.an-steps li .t{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.03em}
+.an-steps li .d{margin-top:4px;font-size:14px;line-height:1.55;color:rgba(242,241,236,.66)}
+.an-steps li i{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left center;display:block}
+.an-fallback{position:absolute;right:64px;top:50%;display:none;color:rgba(242,241,236,.5);font-size:14px}
+.an-pin.no-gl .an-fallback{display:block}
+.an-ui{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.an-ui>div,.an-ui>.an-line{position:absolute;left:0;top:0;opacity:0;will-change:transform,opacity}
+.an-chip{width:136px;height:48px;padding:7px 12px 0;border-radius:14px;background:rgba(0,16,38,.92);border:1px solid rgba(255,195,0,.4);display:grid;grid-template-columns:1fr auto;column-gap:6px;align-items:baseline;white-space:nowrap;font-size:14px;font-weight:600;color:var(--off)}
+.an-chip .v{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.an-chip.low .v{color:var(--lemon)}
+.an-chip i{grid-column:1/-1;display:block;height:4px;margin-top:6px;border-radius:2px;background:rgba(242,241,236,.14);overflow:hidden}
+.an-chip b{display:block;height:100%;background:rgba(242,241,236,.85);transform:scaleX(0);transform-origin:left center}
+.an-chip.low b{background:var(--lemon)}
+.an-line{width:100px;height:1.5px;background:var(--gold);transform-origin:0 50%}
+.an-mark{width:32px;height:32px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:17px;box-shadow:0 0 0 7px rgba(255,195,0,.22)}
+.an-card,.an-result{padding:13px 16px 15px;border-radius:18px;background:rgba(0,16,38,.95);border:1px solid rgba(255,195,0,.5);text-align:left}
+.an-card{width:206px}
+.an-result{width:240px}
+.an-c-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.an-c-top>span:not(.an-c-t){width:22px;height:22px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:13px;letter-spacing:0}
+.an-result .an-c-top{justify-content:space-between}
+.an-c-top em{font-style:normal;letter-spacing:0;text-transform:none;color:rgba(242,241,236,.45)}
+.an-c-big{margin-top:6px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:40px;line-height:1;letter-spacing:-.03em}
+.an-c-l1{margin-top:5px;font-size:15px;font-weight:600;line-height:1.3}
+.an-c-l2{margin-top:2px;font-size:14px;line-height:1.35;color:rgba(242,241,236,.68)}
+.an-r-row{margin-top:8px;display:flex;justify-content:space-between;align-items:flex-end}
+.an-r-big{font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:52px;line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.an-r-side{text-align:right}
+.an-r-side b{display:block;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:24px;color:var(--gold)}
+.an-r-side span{font-size:13px;color:rgba(242,241,236,.55)}
+.an-r-sub{margin-top:4px;font-size:15px;color:rgba(242,241,236,.7)}
+.an-r-sub em{display:block;font-style:normal;font-size:12px;color:rgba(242,241,236,.42)}
+.an-result canvas{display:block;width:206px;height:84px;margin-top:10px}
+.an-caption{position:absolute;z-index:3;left:600px;right:64px;bottom:40px;pointer-events:none}
+.an-caption>div{transition:opacity .22s ease,transform .22s ease,filter .22s ease}
+.an-caption.out>div{opacity:0;transform:translateY(10px);filter:blur(6px)}
+.an-caption .k{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.an-caption .s{margin-top:8px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.03em;max-width:700px}
+@media (prefers-reduced-motion:reduce){.an-pin>canvas{transition:none}.an-caption>div{transition:none}}
