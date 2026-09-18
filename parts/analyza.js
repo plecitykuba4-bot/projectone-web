@@ -128,12 +128,13 @@ async function boot() {
     return k.tex;
   };
   const face = (g, w, h) => {
-    const grad = g.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, "rgba(12,46,86,.97)");
-    grad.addColorStop(1, "rgba(5,28,56,.97)");
+    const grad = g.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, "rgba(240,232,206,.94)");
+    grad.addColorStop(0.55, "rgba(228,228,224,.92)");
+    grad.addColorStop(1, "rgba(204,217,234,.92)");
     g.fillStyle = grad;
-    g.beginPath(); g.roundRect(2, 2, w - 4, h - 4, R * PX); g.fill();
-    g.strokeStyle = "rgba(242,241,236,.14)"; g.lineWidth = 4; g.stroke();
+    g.beginPath(); g.roundRect(3, 3, w - 6, h - 6, R * PX); g.fill();
+    g.strokeStyle = "rgba(255,255,255,.8)"; g.lineWidth = 5; g.stroke();
   };
   const pill = (g, x, y, w, h, fill, stroke) => {
     g.beginPath(); g.roundRect(x, y, w, h, h / 2);
@@ -151,94 +152,98 @@ async function boot() {
   };
 
   /* obsah ukázkového webu: kuchyňské studio Nord. A = před analýzou, B = po úpravě */
+  const T = "#000814", M = "rgba(0,8,20,.58)", GA = "#a67c00";
+  const glassCard = (g, x, y, w, h, r) => box(g, x, y, w, h, r, "rgba(255,255,255,.62)", "rgba(255,255,255,.92)");
   const DRAW = {
     nav: (g, w, h) => {
       face(g, w, h);
-      text(g, "nord", 60, h / 2, H(78), INK);
-      g.fillStyle = GOLD; g.beginPath(); g.arc(236, h / 2 + 18, 11, 0, Math.PI * 2); g.fill();
-      ["Kuchyně", "Realizace", "Kontakt"].forEach((t, i) => text(g, t, 640 + i * 270, h / 2, B(50, 600), MUTED));
-      pill(g, w - 380, h / 2 - 46, 320, 92, null, "rgba(255,195,0,.8)");
-      text(g, "Poptávka", w - 220, h / 2, B(46, 600), GOLD, "center");
+      text(g, "dentalia", 60, h / 2, H(76), T);
+      g.font = H(76);
+      g.fillStyle = GOLD; g.beginPath(); g.arc(60 + g.measureText("dentalia").width + 16, h / 2 + 20, 11, 0, Math.PI * 2); g.fill();
+      ["Ošetření", "Ceník", "Tým"].forEach((t, i) => text(g, t, 720 + i * 230, h / 2, B(48, 600), M));
+      pill(g, w - 430, h / 2 - 46, 370, 92, GOLD);
+      text(g, "Objednat se", w - 245, h / 2, B(46, 600), T, "center");
     },
     heroA: (g, w, h) => {
       face(g, w, h);
-      text(g, "OD ROKU 2009", 70, 78, B(42, 600), "rgba(242,241,236,.5)");
-      text(g, "Vítejte na našich", 62, 186, H(112), INK);
-      text(g, "stránkách.", 62, 300, H(112), INK);
-      text(g, "Jsme tradiční česká firma.", 70, 392, B(54), MUTED);
-      text(g, "Více o nás →", w - 80, 392, B(50), "rgba(242,241,236,.4)", "right");
+      text(g, "ZUBNÍ ORDINACE · PRAHA 5", 70, 78, B(40, 600), M);
+      text(g, "Vítejte v naší", 62, 186, H(112), T);
+      text(g, "ordinaci.", 62, 300, H(112), T);
+      text(g, "Jsme tu pro vás od roku 1998.", 70, 392, B(52), M);
+      text(g, "Více o nás →", w - 80, 392, B(48), "rgba(0,8,20,.4)", "right");
     },
     heroB: (g, w, h) => {
       face(g, w, h);
-      text(g, "KUCHYNĚ NA MÍRU · BRNO", 70, 78, B(42, 600), GOLD);
-      text(g, "Kuchyně na míru", 62, 172, H(108), INK);
-      text(g, "do 6 týdnů.", 62, 278, H(108), INK);
-      pill(g, 70, 350, 560, 100, GOLD);
-      text(g, "Chci návrh zdarma", 350, 401, B(54, 600), NAVY, "center");
-      text(g, "4,9 / 5", w - 80, 200, H(140), INK, "right");
-      text(g, "212 recenzí", w - 80, 300, B(52), MUTED, "right");
+      text(g, "PRAHA 5 · SMÍCHOV", 70, 78, B(40, 600), M);
+      text(g, "Ošetření bez bolesti", 62, 180, H(104), T);
+      text(g, "a bez čekání.", 62, 290, H(104), T);
+      pill(g, 70, 348, 600, 100, GOLD);
+      text(g, "Objednat se online", 370, 399, B(52, 600), T, "center");
+      text(g, "4,9 / 5", w - 80, 250, H(130), T, "right");
+      text(g, "Google · 386 recenzí", w - 80, 340, B(44), M, "right");
     },
     services: (g, w, h) => {
       face(g, w, h);
-      const cw = (w - 140 - 80) / 3;
-      [["01", "Kuchyně", "Návrh i montáž"], ["02", "Skříně", "Do každého rohu"], ["03", "Úpravy", "Nová dvířka"]].forEach(([n, t, d], i) => {
-        const x = 70 + i * (cw + 40);
-        box(g, x, 36, cw, h - 72, 34, "rgba(242,241,236,.06)", "rgba(242,241,236,.18)");
-        text(g, n, x + 42, 100, H(52), GOLD);
-        text(g, t, x + 42, 182, H(76), INK);
-        text(g, d, x + 42, 256, B(50), MUTED);
+      const cw = (w - 140 - 60) / 3;
+      [["PREVENCE", "Hygiena", "Dentální hygiena", "od 1 290 Kč"], ["ESTETIKA", "Bělení", "Ordinační bělení", "od 4 900 Kč"], ["CHIRURGIE", "Implantáty", "Včetně korunky", "od 29 000 Kč"]].forEach(([k, t, d, c], i) => {
+        const x = 70 + i * (cw + 30);
+        glassCard(g, x, 34, cw, h - 68, 34);
+        text(g, k, x + 38, 88, B(38, 600), GA);
+        text(g, t, x + 38, 160, H(70), "rgba(0,8,20,.72)");
+        text(g, d, x + 38, 226, B(42), M);
+        text(g, c, x + 38, 296, H(54), T);
       });
     },
     formA: (g, w, h) => {
       face(g, w, h);
-      text(g, "Poptávka", 70, 72, H(78), INK);
-      text(g, "7 povinných polí", 420, 76, B(46), "rgba(242,241,236,.45)");
-      ["Jméno", "Příjmení", "E-mail", "Telefon", "Adresa", "Rozpočet", "Termín"].forEach((l, i) => {
+      text(g, "Objednávka", 70, 72, H(76), "rgba(0,8,20,.72)");
+      text(g, "7 povinných polí", 510, 78, B(44), M);
+      ["Jméno", "Příjmení", "Rodné č.", "Pojišťovna", "Telefon", "E-mail", "Důvod"].forEach((l, i) => {
         const x = 70 + i * 232;
-        box(g, x, 140, 218, 84, 16, null, "rgba(242,241,236,.3)");
-        text(g, l, x + 16, 182, B(40), MUTED);
+        box(g, x, 142, 218, 84, 16, "rgba(255,255,255,.4)", "rgba(0,8,20,.16)");
+        text(g, l, x + 16, 184, B(36), M);
       });
-      pill(g, w - 300, 30, 230, 84, "rgba(242,241,236,.14)");
-      text(g, "Odeslat", w - 185, 72, B(44, 600), MUTED, "center");
+      pill(g, w - 300, 30, 230, 84, "rgba(0,8,20,.1)");
+      text(g, "Odeslat", w - 185, 72, B(44, 600), M, "center");
     },
     formB: (g, w, h) => {
       face(g, w, h);
-      text(g, "Návrh zdarma", 70, 72, H(78), INK);
-      text(g, "Ozveme se do 24 hodin", 660, 78, B(46), MUTED);
-      ["Jméno", "Telefon", "Co plánujete?"].forEach((l, i) => {
-        const x = 70 + i * 390;
-        box(g, x, 140, 370, 84, 16, null, "rgba(242,241,236,.4)");
-        text(g, l, x + 24, 182, B(48), MUTED);
+      text(g, "Volné termíny", 70, 72, H(76), "rgba(0,8,20,.72)");
+      text(g, "tento týden", 560, 80, B(44), M);
+      ["Po 14:00", "Út 9:30", "St 16:15", "Čt 8:00", "Pá 11:45"].forEach((l, i) => {
+        const x = 70 + i * 262;
+        if (i === 0) box(g, x, 140, 246, 88, 18, T); else box(g, x, 140, 246, 88, 18, "rgba(255,255,255,.55)", "rgba(0,8,20,.14)");
+        text(g, l, x + 123, 184, B(44, 600), i === 0 ? "#FAF8F2" : "rgba(0,8,20,.7)", "center");
       });
-      pill(g, w - 480, 136, 410, 92, GOLD);
-      text(g, "Odeslat", w - 275, 182, B(54, 600), NAVY, "center");
+      pill(g, w - 380, 28, 320, 88, T);
+      text(g, "Rezervovat", w - 220, 72, B(46, 600), "#FAF8F2", "center");
     },
     reviews: (g, w, h) => {
       face(g, w, h);
-      text(g, "Recenze", 70, 70, H(78), INK);
-      [["„Hotovo v termínu.“", "Jana, Brno"], ["„Skvělá práce.“", "Petr, Kuřim"]].forEach(([q, a], i) => {
-        const x = 70 + i * 560;
-        box(g, x, 120, 530, 128, 26, "rgba(242,241,236,.06)", "rgba(242,241,236,.18)");
-        text(g, q, x + 32, 166, B(48, 600), INK);
-        text(g, a, x + 32, 218, B(40), MUTED);
+      text(g, "Pacienti", 70, 68, H(76), T);
+      [["„Poprvé jsem se nebála.“", "Tereza, Praha"], ["„Objednání za minutu.“", "Jakub, Řevnice"]].forEach(([q, a], i) => {
+        const x = 70 + i * 600;
+        glassCard(g, x, 120, 570, 128, 24);
+        text(g, q, x + 30, 166, B(44, 600), T);
+        text(g, a, x + 30, 218, B(38), M);
       });
-      text(g, "4,9 / 5", w - 70, 158, H(104), GOLD, "right");
-      text(g, "212 recenzí", w - 70, 232, B(44), MUTED, "right");
+      text(g, "4,9 / 5", w - 70, 164, H(104), T, "right");
+      text(g, "386 recenzí", w - 70, 236, B(42), M, "right");
     },
     footer: (g, w, h) => {
       face(g, w, h);
-      text(g, "nord", 60, h / 2, H(62), INK);
-      text(g, "© 2026 Nord · Brno", w / 2, h / 2, B(46), MUTED, "center");
-      text(g, "Instagram", w - 60, h / 2, B(46), MUTED, "right");
+      text(g, "dentalia", 60, h / 2, H(60), T);
+      text(g, "Plzeňská 12 · Praha 5", w / 2, h / 2, B(46), M, "center");
+      text(g, "Po–Pá 7–19", w - 60, h / 2, B(46), M, "right");
     },
   };
 
   /* ---------- sekce webu ---------- */
   const defs = [
-    { name: "Navigace", h: 0.3, a: "nav", depthA: 100, depthB: 100, blobsA: [[0.08, 0.5, 0.09]], blobsB: [[0.08, 0.5, 0.09], [0.88, 0.5, 0.08]] },
-    { name: "Úvod", h: 0.92, a: "heroA", b: "heroB", depthA: 100, depthB: 100, blobsA: [[0.24, 0.66, 0.2], [0.14, 0.3, 0.08]], blobsB: [[0.24, 0.7, 0.18], [0.16, 0.14, 0.13], [0.86, 0.6, 0.12]], anchor: [0.7, 0.62] },
-    { name: "Služby", h: 0.64, a: "services", depthA: 64, depthB: 71, blobsA: [[0.18, 0.55, 0.13]], blobsB: [[0.18, 0.55, 0.13], [0.5, 0.55, 0.11]] },
-    { name: "Poptávka", h: 0.48, a: "formA", b: "formB", depthA: 38, depthB: 58, blobsA: [[0.07, 0.36, 0.07]], blobsB: [[0.2, 0.36, 0.12], [0.78, 0.36, 0.13]], anchor: [0.5, 0.52] },
+    { name: "Navigace", h: 0.3, a: "nav", depthA: 100, depthB: 100, blobsA: [[0.08, 0.5, 0.09]], blobsB: [[0.08, 0.5, 0.09], [0.86, 0.5, 0.09]] },
+    { name: "Úvod", h: 0.92, a: "heroA", b: "heroB", depthA: 100, depthB: 100, blobsA: [[0.2, 0.62, 0.2], [0.12, 0.18, 0.06]], blobsB: [[0.24, 0.66, 0.18], [0.18, 0.16, 0.13], [0.86, 0.52, 0.12]], anchor: [0.52, 0.62] },
+    { name: "Ošetření", h: 0.7, a: "services", depthA: 64, depthB: 71, blobsA: [[0.18, 0.55, 0.13]], blobsB: [[0.18, 0.5, 0.13], [0.5, 0.5, 0.11]] },
+    { name: "Objednání", h: 0.5, a: "formA", b: "formB", depthA: 38, depthB: 58, blobsA: [[0.07, 0.34, 0.07]], blobsB: [[0.12, 0.34, 0.1], [0.88, 0.82, 0.1]], anchor: [0.52, 0.34] },
     { name: "Recenze", h: 0.52, a: "reviews", depthA: 18, depthB: 86, blobsA: [[0.25, 0.46, 0.06]], blobsB: [[0.2, 0.46, 0.14], [0.54, 0.46, 0.12], [0.9, 0.52, 0.1]], anchor: [0.62, 0.5] },
     { name: "Patička", h: 0.24, a: "footer", depthA: 12, depthB: 40, blobsA: [[0.5, 0.5, 0.03]], blobsB: [[0.5, 0.5, 0.05]] },
   ];
@@ -279,8 +284,8 @@ async function boot() {
   const plane = (w, h) => { const g = new THREE.PlaneGeometry(w, h); geoms.push(g); return g; };
 
   const glassSlab = new THREE.MeshPhysicalMaterial({
-    color: 0x16457d, roughness: 0.16, transmission: 0.85, thickness: 0.5, ior: 1.485,
-    clearcoat: 1, clearcoatRoughness: 0.1, attenuationColor: new THREE.Color(0x003566), attenuationDistance: 1.2, envMapIntensity: 0.9,
+    color: 0xe6eaf0, roughness: 0.38, transmission: 0.45, thickness: 0.4, ior: 1.45,
+    clearcoat: 1, clearcoatRoughness: 0.2, envMapIntensity: 1.1,
   });
   mats.push(glassSlab);
 
@@ -311,7 +316,7 @@ async function boot() {
       c.rgb *= 1.0 + inL * 0.1;
       vec3 ramp = h < 0.5 ? mix(vec3(0.10, 0.36, 0.72), vec3(1.0, 0.62, 0.0), h * 2.0) : mix(vec3(1.0, 0.62, 0.0), vec3(1.0, 0.93, 0.62), (h - 0.5) * 2.0);
       c.rgb = mix(c.rgb, ramp, smoothstep(0.04, 0.9, h) * 0.68);
-      c.rgb *= 1.0 - 0.62 * uDim;
+      c.rgb = mix(c.rgb, vec3(0.02, 0.07, 0.15), 0.6 * uDim);
       vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);
       vec2 q = abs(p) - vec2(uAspect * 0.5, 0.5) + uRadius;
       float d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uRadius;
@@ -433,8 +438,8 @@ async function boot() {
   flowGeo.setAttribute("aAlpha", new THREE.BufferAttribute(flowAlpha, 1));
   geoms.push(flowGeo);
   const flowMat = new THREE.ShaderMaterial({
-    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
-    uniforms: { uPR: { value: renderer.getPixelRatio() }, uColor: { value: new THREE.Color(0xffd60a) } },
+    transparent: true, depthWrite: false, blending: THREE.NormalBlending, toneMapped: false,
+    uniforms: { uPR: { value: renderer.getPixelRatio() }, uColor: { value: new THREE.Color(0xd49a00) } },
     vertexShader: `attribute float aAlpha; uniform float uPR; varying float vA;
       void main(){ vA = aAlpha; vec4 mv = modelViewMatrix * vec4(position,1.0); gl_PointSize = 20.0 * uPR / -mv.z; gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `uniform vec3 uColor; varying float vA;
@@ -450,7 +455,7 @@ async function boot() {
      3D bodů na obrazovku a zapisují se jen přes transform a opacity. */
   const FIND = [
     { slab: 1, n: 1, big: "62 %", l1: "odejde do 10 sekund", l2: "Úvod neříká, co nabízíte.", at: [1.75, 1.92] },
-    { slab: 3, n: 2, big: "9 %", l1: "dokončí formulář", l2: "Chce 7 údajů.", at: [1.92, 2.08] },
+    { slab: 3, n: 2, big: "9 %", l1: "dokončí objednávku", l2: "Chce 7 údajů i rodné číslo.", at: [1.92, 2.08] },
     { slab: 4, n: 3, big: "18 %", l1: "uvidí recenze", l2: "Jsou úplně dole.", at: [2.08, 2.25] },
   ];
   const ui = document.createElement("div");
@@ -472,7 +477,7 @@ async function boot() {
   });
   const resEl = el("an-result", `<div class="an-c-top"><span class="an-c-t">Výsledek za 30 dní</span></div>
     <div class="an-r-row"><div class="an-r-big">14</div><div class="an-r-side"><b>+193 %</b><span>dřív 14</span></div></div>
-    <div class="an-r-sub">poptávek za měsíc<em>ukázková data</em></div><canvas></canvas>`);
+    <div class="an-r-sub">objednávek za měsíc<em>ukázková data</em></div><canvas></canvas>`);
   const resBig = resEl.querySelector(".an-r-big");
   const chartCanvas = resEl.querySelector("canvas");
   const CHART = [0.1, 0.12, 0.11, 0.14, 0.13, 0.3, 0.42, 0.5, 0.6, 0.7, 0.8, 0.92];
@@ -516,18 +521,18 @@ async function boot() {
   const capK = capEl && capEl.querySelector(".k");
   const capS = capEl && capEl.querySelector(".s");
   const BEATS = [
-    [0.0, "01 · Projdeme", "Tohle je web kuchyňského studia. Vypadá dobře, ale poptávek chodí málo."],
+    [0.0, "01 · Projdeme", "Tohle je web zubní kliniky. Vypadá dobře, ale pacienti se objednávají málo."],
     [0.25, "01 · Projdeme", "Rozložíme ho na jednotlivé sekce."],
     [0.75, "01 · Projdeme", "U každé sekce změříme, kolik lidí k ní vůbec doscrolluje."],
     [1.25, "02 · Najdeme", "Lupou projedeme celý web. Heatmapa pod ní ukáže, kam se lidé opravdu dívají."],
-    [1.75, "02 · Najdeme · problém 1 ze 3", "Úvod neříká, co firma nabízí, a nemá žádné tlačítko."],
-    [1.92, "02 · Najdeme · problém 2 ze 3", "Formulář chce 7 údajů. Dokončí ho jen 9 % lidí."],
-    [2.08, "02 · Najdeme · problém 3 ze 3", "Recenze jsou úplně dole. Uvidí je 18 % lidí."],
+    [1.75, "02 · Najdeme · problém 1 ze 3", "Úvod neříká, co klinika nabízí, a nemá tlačítko k objednání."],
+    [1.92, "02 · Najdeme · problém 2 ze 3", "Objednávka chce 7 údajů včetně rodného čísla. Dokončí ji jen 9 % lidí."],
+    [2.08, "02 · Najdeme · problém 3 ze 3", "Recenze pacientů jsou úplně dole. Uvidí je 18 % lidí."],
     [2.25, "03 · Přeskládáme", "Recenze posuneme nahoru, hned pod úvod."],
-    [2.45, "03 · Přeskládáme", "Úvod dostane jasnou nabídku a tlačítko."],
-    [2.62, "03 · Přeskládáme", "Formulář zkrátíme ze 7 polí na 3."],
-    [3.0, "04 · Doladíme", "Web složíme zpátky. K formuláři teď dojde 58 % lidí místo 38 %."],
-    [3.5, "04 · Doladíme", "Výsledek za 30 dní: skoro 3× víc poptávek."],
+    [2.45, "03 · Přeskládáme", "Úvod dostane jasné sdělení a tlačítko Objednat se."],
+    [2.62, "03 · Přeskládáme", "Místo formuláře ukážeme volné termíny na jedno kliknutí."],
+    [3.0, "04 · Doladíme", "Web složíme zpátky. K objednání teď dojde 58 % lidí místo 38 %."],
+    [3.5, "04 · Doladíme", "Výsledek za 30 dní: skoro 3× víc objednávek."],
   ];
   let beatIdx = -1, beatTimer = 0;
   const setBeat = (idx, instant) => {
@@ -844,8 +849,8 @@ async function boot() {
 
     /* záře pozadí: barvy jako CSS proměnné */
     const warm = S.done, alarm = S.focusAny;
-    pin.style.setProperty("--an-a", (0.35 + 0.35 * S.find + 0.2 * alarm).toFixed(3));
-    pin.style.setProperty("--an-b", (0.15 + 0.55 * warm).toFixed(3));
+    pin.style.setProperty("--an-a", (0.75 + 0.15 * S.find + 0.1 * warm).toFixed(3));
+    pin.style.setProperty("--an-b", (0.85 + 0.15 * alarm).toFixed(3));
     hemi.groundColor.setRGB(lerp(0, 0.45, warm), lerp(0.21, 0.33, warm), lerp(0.4, 0.1, warm));
 
     /* titulek a kroky vlevo */

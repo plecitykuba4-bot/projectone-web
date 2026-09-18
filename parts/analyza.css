@@ -4,10 +4,10 @@
 #analyza{height:560vh;padding:0;border-top:1px solid var(--line);overflow:clip}
 .an-pin{position:sticky;top:0;height:100vh;min-height:640px;overflow:hidden}
 .an-glow{position:absolute;inset:0;pointer-events:none;will-change:opacity}
-.an-glow.g1{opacity:var(--an-a,.35)}
-.an-glow.g2{opacity:var(--an-b,.15)}
-.an-glow.g1{background:radial-gradient(52% 62% at 68% 52%,rgba(0,53,102,.55),rgba(0,29,61,.18) 55%,rgba(0,8,20,0) 80%)}
-.an-glow.g2{background:radial-gradient(46% 56% at 68% 54%,rgba(255,195,0,.10),rgba(0,29,61,.22) 55%,rgba(0,8,20,0) 80%)}
+.an-glow.g1{opacity:var(--an-a,.8)}
+.an-glow.g2{opacity:var(--an-b,.9)}
+.an-glow.g1{background:radial-gradient(28% 36% at 70% 26%,rgba(255,195,0,.55),rgba(255,195,0,.12) 55%,rgba(0,8,20,0) 78%)}
+.an-glow.g2{background:radial-gradient(34% 44% at 86% 72%,rgba(10,92,184,.75),rgba(10,92,184,.18) 55%,rgba(0,8,20,0) 80%)}
 .an-pin>canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;opacity:0;transition:opacity .55s ease}
 .an-pin>canvas.ready{opacity:1}
 .an-copy{position:relative;z-index:2;height:100%;padding:82px 64px 0;display:flex;align-items:center;pointer-events:none}
