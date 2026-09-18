@@ -1,4 +1,5 @@
 <!doctype html><html lang="cs"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>projectone — weby, e-shopy, vizuální identita, automatizace</title>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=switzer@400,500,600,700&display=swap">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
@@ -248,6 +249,67 @@ nav.compact { background: rgba(0,8,20,.94); box-shadow: 0 10px 30px rgba(0,0,0,.
 }
 
 
+/* MOBIL A TABLET — web má základ pro 1440 px, tady se přizpůsobuje užším displejům.
+   Zachováno: paleta, písma, zaoblení. Nic se nepřekrývá, karty jdou pod sebe. */
+@media (max-width:1439px){
+  .w{width:100%}
+  .row{display:flex;justify-content:center;align-items:flex-start;gap:28px;padding:0 32px}
+  .doc{position:relative;left:auto!important;top:auto!important;width:min(400px,30vw)}
+  .d1{margin-top:46px}.d3{margin-top:42px}
+}
+@media (max-width:1100px){
+  section{padding-left:32px;padding-right:32px}
+  nav{padding:0 32px}
+  nav ul{gap:20px}
+  .cols3,.grid5{grid-template-columns:1fr 1fr}
+  .srow{grid-template-columns:220px 1fr 1fr;gap:20px}
+  .srow .cell:nth-child(4){display:none}
+  .srow .price{grid-column:1/-1;text-align:left}
+  .calc,.form{grid-template-columns:1fr;gap:32px}
+  footer{grid-template-columns:1fr 1fr;padding:40px 32px}
+  .copy{padding:20px 32px}
+}
+@media (max-width:760px){
+  section{padding-left:20px;padding-right:20px}
+  h2{font-size:clamp(30px,8.4vw,40px)}
+  .lead{font-size:16px}
+  nav{height:64px;padding:0 20px}
+  nav ul{display:none}
+  nav .b{padding:10px 16px}
+  #hero{height:auto;overflow:visible;padding-bottom:40px}
+  .top{padding:36px 20px 0}
+  h1{font-size:clamp(34px,9.6vw,46px);margin-top:18px}
+  #hero .sub{font-size:16px}
+  .acts{flex-wrap:wrap;justify-content:center}
+  .trust{flex-wrap:wrap;justify-content:center;gap:10px 16px;margin-top:28px}
+  .trust i{display:none}
+  .trust .k{flex-basis:100%;text-align:center}
+  .row{position:relative;left:auto;right:auto;bottom:auto;height:auto;flex-direction:column;align-items:center;gap:30px;padding:40px 20px 10px}
+  .doc{width:100%;max-width:400px}
+  .d1,.d3{margin-top:0}
+  #pristup,#sluzby,#prubeh,#proc,#cena,#faq,#kontakt{padding-top:64px;padding-bottom:64px}
+  .cols3,.grid5{grid-template-columns:1fr;gap:16px;margin-top:32px}
+  .col,.pcard{padding:24px 22px}
+  .srv{margin-top:32px}
+  .srow{grid-template-columns:1fr;gap:12px;padding:24px 0}
+  .srow .cell:nth-child(4){display:block}
+  .srow:after{display:none}
+  .tl{padding-left:34px;margin-top:32px}
+  .tl-line{left:7px}
+  .tl-step .dot{left:-34px}
+  .tl-step .meta{position:static;width:auto;text-align:left;margin-bottom:8px}
+  .tl-step .meta b{display:inline;margin:0 8px 0 0}
+  .tl-step h3,.col h3{font-size:22px}
+  .calc{margin-top:32px}
+  .panel{padding:24px 22px}
+  .panel .amount{font-size:28px;flex-wrap:wrap;white-space:normal}
+  .q .h .t{font-size:18px}
+  .form{margin-top:32px}
+  .fields{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  footer{grid-template-columns:1fr;gap:28px;padding:36px 20px}
+  .copy{flex-direction:column;gap:6px;padding:20px}
+}
 /* ANALÝZA VE 3D — scroll-driven fyzikální scéna.
    Sekce je vysoká, obsah drží sticky „pin“. Scroll jen váží síly, pohyb počítá fyzika.
    Canvas leží pod textem přes celou šířku, kontejnery propouští kurzor do scény. */
@@ -305,6 +367,22 @@ nav.compact { background: rgba(0,8,20,.94); box-shadow: 0 10px 30px rgba(0,0,0,.
 .an-caption .k{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 .an-caption .s{margin-top:8px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.03em;max-width:700px}
 @media (prefers-reduced-motion:reduce){.an-pin>canvas{transition:none}.an-caption>div{transition:none}}
+/* mobil */
+@media (max-width:760px){
+  .an-pin{height:100vh;height:100svh;min-height:560px}
+  .an-copy{align-items:flex-start;padding:76px 20px 0}
+  .an-text{width:auto}
+  .an-text .lead,.an-steps{display:none}
+  .an-text h2{font-size:28px;margin-top:10px!important}
+  .an-caption{left:20px;right:20px;bottom:22px}
+  .an-caption .s{font-size:19px}
+  .an-chip{display:none}
+  .an-card{width:min(300px,calc(100vw - 40px))}
+  .an-c-big{font-size:32px}
+  .an-result{width:min(280px,calc(100vw - 40px))}
+  .an-result canvas{display:none}
+  .an-r-big{font-size:44px}
+}
 </style></head><body>
 <div class="w">
 
@@ -976,7 +1054,8 @@ async function boot() {
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-  renderer.shadowMap.enabled = true;
+  const LOWPOWER = Math.min(window.innerWidth, window.innerHeight) < 760;
+  renderer.shadowMap.enabled = !LOWPOWER;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
@@ -1213,7 +1292,7 @@ async function boot() {
   const plane = (w, h) => { const g = new THREE.PlaneGeometry(w, h); geoms.push(g); return g; };
 
   const glassSlab = new THREE.MeshPhysicalMaterial({
-    color: 0xe6eaf0, roughness: 0.38, transmission: 0.45, thickness: 0.4, ior: 1.45,
+    color: 0xe6eaf0, roughness: 0.38, transmission: LOWPOWER ? 0 : 0.45, thickness: 0.4, ior: 1.45,
     clearcoat: 1, clearcoatRoughness: 0.2, envMapIntensity: 1.1,
   });
   mats.push(glassSlab);
@@ -1438,7 +1517,7 @@ async function boot() {
     if (reach > 0.01) { g.fillStyle = GOLD; g.beginPath(); g.arc(lerp(x0, x1, reach / n), lerp(y0, y1, at(reach)), 4, 0, Math.PI * 2); g.fill(); }
   };
   drawChart(0);
-  const view = { w: 1440, h: 900 };
+  const view = { w: 1440, h: 900, mobile: false, camZ: 12.4, camX: 0, lookY: 0 };
   const proj = new THREE.Vector3();
   const toScreen = (v) => {
     proj.copy(v).project(camera);
@@ -1514,6 +1593,12 @@ async function boot() {
     view.w = w; view.h = h;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    /* na úzkém displeji: web na střed, celá šířka, v horní části nad kartami a titulkem */
+    view.mobile = w < 760;
+    const tan = Math.tan(THREE.MathUtils.degToRad(15));
+    view.camZ = view.mobile ? Math.max(12.4, (W * SC * 1.12) / (2 * tan * camera.aspect)) : 12.4;
+    view.camX = view.mobile ? PAGE_ORIGIN.x - 0.4 : 0;
+    view.lookY = view.mobile ? -0.2 * tan * view.camZ : 0;
     if (frozenP !== null && staticReady) renderer.render(scene, camera);
   };
   const ro = new ResizeObserver(fit);
@@ -1604,8 +1689,11 @@ async function boot() {
     /* kamera: pružina k cíli (celkový záběr / zaostření na nález / výsledek) */
     const fy = focusW > 0 ? focusY / focusW : 0;
     const fk = reduce ? 0 : S.focusAny;
-    camTarget.set(0, lerp(0.2, fy * 0.4, fk), lerp(12.4, 11.6, fk) + S.exp * 0.5);
-    lookTarget.set(0.4, fy * 0.5 * fk, 0);
+    const zk = view.camZ / 12.4;
+    /* na mobilu: rozložený web uprostřed, jinak posunutý nahoru, aby pod ním byla místo pro kartu */
+    const ly = view.lookY * (1 - S.exp);
+    camTarget.set(view.camX, lerp(0.2, fy * 0.4, fk) + ly, lerp(view.camZ, view.camZ * 0.935, fk) + S.exp * 0.5 * zk);
+    lookTarget.set(0.4 + view.camX, fy * 0.5 * fk + ly, 0);
     cam.vel.addScaledVector(tmpA.copy(camTarget).sub(cam.pos), 0.02).multiplyScalar(0.86);
     cam.pos.add(cam.vel);
     cam.lookVel.addScaledVector(tmpA.copy(lookTarget).sub(cam.look), 0.02).multiplyScalar(0.86);
@@ -1737,7 +1825,8 @@ async function boot() {
     }
 
     /* nálezy (HTML): značka na sekci, čára a karta vpravo */
-    const cardX = view.w - CARD_W - 16 + tilt.y * 40;
+    const capTop = view.mobile && capEl ? capEl.offsetTop : view.h;
+    const cardX = view.mobile ? 0 : view.w - CARD_W - 16 + tilt.y * 40;
     findings.forEach((f) => {
       const s = slabs[f.slab];
       const [au, av] = defs[f.slab].anchor;
@@ -1746,20 +1835,22 @@ async function boot() {
       [f.ax, f.ay] = toScreen(f.anchorW);
       f.h = f.card.offsetHeight || 132;
     });
-    /* karty podle výšky kotvy, nikdy přes sebe */
+    /* karty podle výšky kotvy, nikdy přes sebe (na mobilu jedna karta nad titulkem) */
     let prevBottom = -Infinity;
     [...findings].sort((a, b) => a.ay - b.ay).forEach((f) => {
-      f.cy = Math.max(f.ay - f.h / 2, prevBottom + CARD_GAP);
+      f.cy = view.mobile ? capTop - 16 - f.h : Math.max(f.ay - f.h / 2, prevBottom + CARD_GAP);
       prevBottom = f.cy + f.h;
     });
     findings.forEach((f, k) => {
-      const vis = ss(f.at[0] + 0.01, f.at[0] + 0.07, p) * (1 - ss(2.28, 2.42, p));
+      const vis = view.mobile ? S.focus[k] : ss(f.at[0] + 0.01, f.at[0] + 0.07, p) * (1 - ss(2.28, 2.42, p));
+      const cw = f.card.offsetWidth || CARD_W;
+      const cx = view.mobile ? (view.w - cw) / 2 : cardX;
       f.card.style.opacity = vis.toFixed(3);
-      f.card.style.transform = `translate3d(${(cardX + (1 - vis) * 24).toFixed(1)}px, ${f.cy.toFixed(1)}px, 0)`;
+      f.card.style.transform = `translate3d(${(cx + (view.mobile ? 0 : (1 - vis) * 24)).toFixed(1)}px, ${(f.cy + (view.mobile ? (1 - vis) * 16 : 0)).toFixed(1)}px, 0)`;
       f.mark.style.opacity = vis.toFixed(3);
       const pulse = reduce ? 1 : 1 + 0.08 * Math.sin(time * 4 + k);
       f.mark.style.transform = `translate3d(${(f.ax - 16).toFixed(1)}px, ${(f.ay - 16).toFixed(1)}px, 0) scale(${(pulse * lerp(0.6, 1, vis)).toFixed(3)})`;
-      const tx = cardX, ty = f.cy + f.h / 2;
+      const tx = view.mobile ? cx + cw / 2 : cardX, ty = view.mobile ? f.cy : f.cy + f.h / 2;
       const dx = tx - f.ax, dy = ty - f.ay;
       const len = Math.hypot(dx, dy) * vis;
       f.line.style.opacity = (vis * 0.9).toFixed(3);
@@ -1768,7 +1859,10 @@ async function boot() {
 
     /* výsledek (HTML) */
     resEl.style.opacity = S.result.toFixed(3);
-    resEl.style.transform = `translate3d(${(view.w - 240 - 12 + tilt.y * 40 + (1 - S.result) * 30).toFixed(1)}px, ${(view.h * 0.5 - 40).toFixed(1)}px, 0)`;
+    const rw = resEl.offsetWidth || 240, rh = resEl.offsetHeight || 220;
+    resEl.style.transform = view.mobile
+      ? `translate3d(${((view.w - rw) / 2).toFixed(1)}px, ${(capTop - 16 - rh + (1 - S.result) * 16).toFixed(1)}px, 0)`
+      : `translate3d(${(view.w - 240 - 12 + tilt.y * 40 + (1 - S.result) * 30).toFixed(1)}px, ${(view.h * 0.5 - 40).toFixed(1)}px, 0)`;
     const q = Math.round(S.chart * 60) / 60;
     if (q !== lastChart && S.result > 0) {
       lastChart = q;

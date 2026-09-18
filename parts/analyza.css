@@ -55,3 +55,19 @@
 .an-caption .k{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 .an-caption .s{margin-top:8px;font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:28px;line-height:1.15;letter-spacing:-.03em;max-width:700px}
 @media (prefers-reduced-motion:reduce){.an-pin>canvas{transition:none}.an-caption>div{transition:none}}
+/* mobil */
+@media (max-width:760px){
+  .an-pin{height:100vh;height:100svh;min-height:560px}
+  .an-copy{align-items:flex-start;padding:76px 20px 0}
+  .an-text{width:auto}
+  .an-text .lead,.an-steps{display:none}
+  .an-text h2{font-size:28px;margin-top:10px!important}
+  .an-caption{left:20px;right:20px;bottom:22px}
+  .an-caption .s{font-size:19px}
+  .an-chip{display:none}
+  .an-card{width:min(300px,calc(100vw - 40px))}
+  .an-c-big{font-size:32px}
+  .an-result{width:min(280px,calc(100vw - 40px))}
+  .an-result canvas{display:none}
+  .an-r-big{font-size:44px}
+}

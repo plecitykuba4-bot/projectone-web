@@ -47,7 +47,8 @@ async function boot() {
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
-  renderer.shadowMap.enabled = true;
+  const LOWPOWER = Math.min(window.innerWidth, window.innerHeight) < 760;
+  renderer.shadowMap.enabled = !LOWPOWER;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const scene = new THREE.Scene();
@@ -284,7 +285,7 @@ async function boot() {
   const plane = (w, h) => { const g = new THREE.PlaneGeometry(w, h); geoms.push(g); return g; };
 
   const glassSlab = new THREE.MeshPhysicalMaterial({
-    color: 0xe6eaf0, roughness: 0.38, transmission: 0.45, thickness: 0.4, ior: 1.45,
+    color: 0xe6eaf0, roughness: 0.38, transmission: LOWPOWER ? 0 : 0.45, thickness: 0.4, ior: 1.45,
     clearcoat: 1, clearcoatRoughness: 0.2, envMapIntensity: 1.1,
   });
   mats.push(glassSlab);
@@ -509,7 +510,7 @@ async function boot() {
     if (reach > 0.01) { g.fillStyle = GOLD; g.beginPath(); g.arc(lerp(x0, x1, reach / n), lerp(y0, y1, at(reach)), 4, 0, Math.PI * 2); g.fill(); }
   };
   drawChart(0);
-  const view = { w: 1440, h: 900 };
+  const view = { w: 1440, h: 900, mobile: false, camZ: 12.4, camX: 0, lookY: 0 };
   const proj = new THREE.Vector3();
   const toScreen = (v) => {
     proj.copy(v).project(camera);
@@ -585,6 +586,12 @@ async function boot() {
     view.w = w; view.h = h;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    /* na úzkém displeji: web na střed, celá šířka, v horní části nad kartami a titulkem */
+    view.mobile = w < 760;
+    const tan = Math.tan(THREE.MathUtils.degToRad(15));
+    view.camZ = view.mobile ? Math.max(12.4, (W * SC * 1.12) / (2 * tan * camera.aspect)) : 12.4;
+    view.camX = view.mobile ? PAGE_ORIGIN.x - 0.4 : 0;
+    view.lookY = view.mobile ? -0.2 * tan * view.camZ : 0;
     if (frozenP !== null && staticReady) renderer.render(scene, camera);
   };
   const ro = new ResizeObserver(fit);
@@ -675,8 +682,11 @@ async function boot() {
     /* kamera: pružina k cíli (celkový záběr / zaostření na nález / výsledek) */
     const fy = focusW > 0 ? focusY / focusW : 0;
     const fk = reduce ? 0 : S.focusAny;
-    camTarget.set(0, lerp(0.2, fy * 0.4, fk), lerp(12.4, 11.6, fk) + S.exp * 0.5);
-    lookTarget.set(0.4, fy * 0.5 * fk, 0);
+    const zk = view.camZ / 12.4;
+    /* na mobilu: rozložený web uprostřed, jinak posunutý nahoru, aby pod ním byla místo pro kartu */
+    const ly = view.lookY * (1 - S.exp);
+    camTarget.set(view.camX, lerp(0.2, fy * 0.4, fk) + ly, lerp(view.camZ, view.camZ * 0.935, fk) + S.exp * 0.5 * zk);
+    lookTarget.set(0.4 + view.camX, fy * 0.5 * fk + ly, 0);
     cam.vel.addScaledVector(tmpA.copy(camTarget).sub(cam.pos), 0.02).multiplyScalar(0.86);
     cam.pos.add(cam.vel);
     cam.lookVel.addScaledVector(tmpA.copy(lookTarget).sub(cam.look), 0.02).multiplyScalar(0.86);
@@ -808,7 +818,8 @@ async function boot() {
     }
 
     /* nálezy (HTML): značka na sekci, čára a karta vpravo */
-    const cardX = view.w - CARD_W - 16 + tilt.y * 40;
+    const capTop = view.mobile && capEl ? capEl.offsetTop : view.h;
+    const cardX = view.mobile ? 0 : view.w - CARD_W - 16 + tilt.y * 40;
     findings.forEach((f) => {
       const s = slabs[f.slab];
       const [au, av] = defs[f.slab].anchor;
@@ -817,20 +828,22 @@ async function boot() {
       [f.ax, f.ay] = toScreen(f.anchorW);
       f.h = f.card.offsetHeight || 132;
     });
-    /* karty podle výšky kotvy, nikdy přes sebe */
+    /* karty podle výšky kotvy, nikdy přes sebe (na mobilu jedna karta nad titulkem) */
     let prevBottom = -Infinity;
     [...findings].sort((a, b) => a.ay - b.ay).forEach((f) => {
-      f.cy = Math.max(f.ay - f.h / 2, prevBottom + CARD_GAP);
+      f.cy = view.mobile ? capTop - 16 - f.h : Math.max(f.ay - f.h / 2, prevBottom + CARD_GAP);
       prevBottom = f.cy + f.h;
     });
     findings.forEach((f, k) => {
-      const vis = ss(f.at[0] + 0.01, f.at[0] + 0.07, p) * (1 - ss(2.28, 2.42, p));
+      const vis = view.mobile ? S.focus[k] : ss(f.at[0] + 0.01, f.at[0] + 0.07, p) * (1 - ss(2.28, 2.42, p));
+      const cw = f.card.offsetWidth || CARD_W;
+      const cx = view.mobile ? (view.w - cw) / 2 : cardX;
       f.card.style.opacity = vis.toFixed(3);
-      f.card.style.transform = `translate3d(${(cardX + (1 - vis) * 24).toFixed(1)}px, ${f.cy.toFixed(1)}px, 0)`;
+      f.card.style.transform = `translate3d(${(cx + (view.mobile ? 0 : (1 - vis) * 24)).toFixed(1)}px, ${(f.cy + (view.mobile ? (1 - vis) * 16 : 0)).toFixed(1)}px, 0)`;
       f.mark.style.opacity = vis.toFixed(3);
       const pulse = reduce ? 1 : 1 + 0.08 * Math.sin(time * 4 + k);
       f.mark.style.transform = `translate3d(${(f.ax - 16).toFixed(1)}px, ${(f.ay - 16).toFixed(1)}px, 0) scale(${(pulse * lerp(0.6, 1, vis)).toFixed(3)})`;
-      const tx = cardX, ty = f.cy + f.h / 2;
+      const tx = view.mobile ? cx + cw / 2 : cardX, ty = view.mobile ? f.cy : f.cy + f.h / 2;
       const dx = tx - f.ax, dy = ty - f.ay;
       const len = Math.hypot(dx, dy) * vis;
       f.line.style.opacity = (vis * 0.9).toFixed(3);
@@ -839,7 +852,10 @@ async function boot() {
 
     /* výsledek (HTML) */
     resEl.style.opacity = S.result.toFixed(3);
-    resEl.style.transform = `translate3d(${(view.w - 240 - 12 + tilt.y * 40 + (1 - S.result) * 30).toFixed(1)}px, ${(view.h * 0.5 - 40).toFixed(1)}px, 0)`;
+    const rw = resEl.offsetWidth || 240, rh = resEl.offsetHeight || 220;
+    resEl.style.transform = view.mobile
+      ? `translate3d(${((view.w - rw) / 2).toFixed(1)}px, ${(capTop - 16 - rh + (1 - S.result) * 16).toFixed(1)}px, 0)`
+      : `translate3d(${(view.w - 240 - 12 + tilt.y * 40 + (1 - S.result) * 30).toFixed(1)}px, ${(view.h * 0.5 - 40).toFixed(1)}px, 0)`;
     const q = Math.round(S.chart * 60) / 60;
     if (q !== lastChart && S.result > 0) {
       lastChart = q;
